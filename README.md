@@ -6,8 +6,8 @@
 
 **Canonical repository:** `GlacierEQ/megaminds-pdf`  
 **Canonical branch:** `master`  
-**Current posture:** `HARDENING`  
-**Identity note:** this is the closest repository match for the user-named “megamind,” but it remains a PDF-viewer project unless a separate intended repository is established.
+**Current posture:** `VITE_MIGRATION_PENDING_LOCKED_VERIFICATION`  
+**Identity note:** this is a focused PDF-viewer project; its name does not establish ownership by `mastermind` or any broader intelligence system.
 
 ## The document experience
 
@@ -20,45 +20,59 @@
 - removes duplicate and empty terms;
 - escapes PDF text and regular-expression characters before highlighting;
 - reports document-load failure explicitly;
-- bundles the installed PDF.js worker into `public/` before start and build.
+- resolves the installed PDF.js worker through `import.meta.url` in the same module as `Document` and `Page`.
 
-### Why it matters
+### Why the migration matters
 
-The project is small, but the engineering boundary is useful: third-party document rendering, worker packaging, text-layer customization, search-state normalization, and accessible page controls must agree. The previous starter README concealed the actual product while the application kept unused pagination state and converted an array search value into a string that later code still treated as an array.
+The viewer behavior was already proven, but the previous production tree remained coupled to Create React App through `react-scripts@5.0.1`. That dependency owned development, build, tests, lint assumptions, and a large transitive tree. The migration replaces that shell with Vite and Vitest while preserving React 18 and the existing viewer contract.
+
+The following packages and compatibility layers are intentionally removed:
+
+- `react-scripts`;
+- unused `react-pdf-highlighter`;
+- unused `copy-webpack-plugin`;
+- unused `web-vitals`;
+- CRA HTML, entrypoint, Jest setup, and report hook;
+- the copied-worker script and public worker artifact boundary.
 
 ### Proof path
 
 | Inspect or run | What it establishes |
 |---|---|
-| [`src/App.js`](src/App.js) | Viewer state, bounded page navigation, literal search normalization, safe highlighting, and load failure behavior. |
-| [`src/App.test.js`](src/App.test.js) | Term normalization, safe highlighting, pagination, and search interaction contracts. |
-| [`scripts/copy-pdf-worker.mjs`](scripts/copy-pdf-worker.mjs) | Deterministic local PDF.js worker preparation from the installed dependency. |
+| [`src/App.jsx`](src/App.jsx) | Viewer state, bounded navigation, literal search normalization, safe highlighting, load failure behavior, and the PDF.js worker boundary. |
+| [`src/App.test.jsx`](src/App.test.jsx) | Term normalization, safe highlighting, pagination, and search interaction contracts under Vitest. |
+| [`vite.config.js`](vite.config.js) | React transform and jsdom test environment. |
 | [`src/Black–Scholes_equation.pdf`](src/Black–Scholes_equation.pdf) | Bundled demonstration document. |
-| [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Locked install, worker preparation, non-watch tests, and production build. |
+| [`.github/workflows/ci.yml`](.github/workflows/ci.yml) | Locked install, behavior tests, production build, and high-severity production audit gate. |
 
 ## Engineering anatomy
 
 ```text
-bundled technical PDF
-        │
-        ▼
+Vite HTML entry
+      │
+      ▼
+React 18 application
+      │
+      ▼
 react-pdf Document load
-        │
-        ├── failure ──► explicit alert
-        │
-        ▼
+      │
+      ├── failure ──► explicit alert
+      │
+      ▼
 page count + bounded page state
-        │
-        ▼
+      │
+      ▼
 single Page render
-        │
-        ▼
+      │
+      ├── PDF.js worker resolved from installed package
+      │
+      ▼
 PDF text item
-        │
-        ▼
+      │
+      ▼
 escape text + normalize literal terms
-        │
-        ▼
+      │
+      ▼
 text-layer highlight projection
 ```
 
@@ -79,28 +93,28 @@ escaped case-insensitive alternation
 <mark> matches in escaped PDF text
 ```
 
-This prevents malformed expressions from breaking rendering and prevents PDF text from being inserted as unescaped HTML.
+### Worker contract
 
-### Worker packaging
+`react-pdf` requires a PDF.js worker compatible with its installed `pdfjs-dist` dependency. `src/App.jsx` configures that worker through:
 
-`react-pdf` requires a PDF.js worker compatible with the installed package. The repository does not rely on an unrelated CDN version.
-
-```bash
-npm run prepare:pdf-worker
+```js
+new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url)
 ```
 
-The script resolves the installed `pdfjs-dist` package and copies its worker into `public/pdf.worker.min.mjs`. `prestart` and `prebuild` execute the same preparation automatically.
+No unrelated CDN version or copied public worker is claimed.
 
 ### Build and verification
 
+Node.js 22.12 or newer is required by the selected Vite boundary.
+
 ```bash
 npm ci
-npm run prepare:pdf-worker
 npm run test:ci
 npm run build
+npm run audit:prod
 ```
 
-The CI workflow uses the checked-in lockfile and fails if tests or the production build do not execute successfully.
+Promotion requires all four commands to pass against the regenerated lockfile. A successful build alone is insufficient while a high or critical production dependency finding remains.
 
 ### Intentional limits
 
@@ -109,7 +123,7 @@ The CI workflow uses the checked-in lockfile and fails if tests or the productio
 - No OCR is performed on image-only pages.
 - No AI summarization, extraction, citation generation, or equation solving is claimed.
 - No backend, account system, document database, or collaboration layer is implemented.
-- A successful local build is not a deployment receipt.
+- A successful repository build is not a deployment receipt.
 
 ## Machine entrypoint
 
@@ -121,19 +135,22 @@ purpose: >-
   Render a bundled technical PDF one page at a time and highlight normalized,
   literal search terms in the PDF text layer.
 status:
-  state: HARDENING
-  evidence_level: UNVERIFIED_PENDING_BRANCH_CI
-  candidate_proof:
-    - locked npm install
-    - deterministic PDF.js worker copy
-    - React behavior tests
-    - production build
-  unverified_scope:
-    - deployment
-    - user-provided document ingestion
-    - persistent annotations
-    - OCR
-    - AI document intelligence
+  state: VITE_MIGRATION_PENDING_LOCKED_VERIFICATION
+  evidence_level: FUNCTION_VERIFIED_SECURITY_RECHECK_REQUIRED
+  preserved_proof:
+    - four viewer behavior tests passed before toolchain migration
+    - production bundle built before toolchain migration
+  required_promotion_proof:
+    - regenerated package-lock.json
+    - npm ci
+    - Vitest behavior suite
+    - Vite production build
+    - zero high or critical production audit findings
+toolchain:
+  runtime: React 18
+  development_and_build: Vite 8
+  tests: Vitest 4 + Testing Library
+  pdf_renderer: react-pdf 10
 inputs:
   document: src/Black–Scholes_equation.pdf
   search: comma or whitespace separated literal terms
@@ -143,9 +160,10 @@ outputs:
   - highlighted text-layer matches
 commands:
   install: npm ci
-  prepare_worker: npm run prepare:pdf-worker
+  start: npm start
   test: npm run test:ci
   build: npm run build
+  production_audit: npm run audit:prod
 relationships:
   - target: GlacierEQ/mastermind
     relation: IDENTITY_REVIEW_PENDING
@@ -161,4 +179,4 @@ limits:
 
 ## Branch hygiene
 
-The repository currently has `master` and one Dependabot branch. Dependency work is not obsolete merely because it is automated; it must be compared against this hardening branch after the application build is green. Merged or superseded work should then be closed and its remote branch ref separately retired.
+PR #3 preserves the functional viewer hardening and carries this measured toolchain migration. The Dependabot branch must be compared after the new lockfile is verified; it should not be merged merely because it updates packages, nor deleted before its unique delta is classified.
