@@ -1,0 +1,68 @@
+{
+  "schema": "glaciereq.megaminds-pdf.vite-migration-verification.v1",
+  "repository": "GlacierEQ/megaminds-pdf",
+  "branch": "hardening/pdf-viewer-truth-contract-2026-07-30",
+  "verified_source_commit": "043b619ef6bde75b6443019122b3979b7d3147dd",
+  "lock_and_receipt_commit": "a654f6ed7872c66954c99f252c05d31711e3d8c4",
+  "status": "VERIFIED_CANDIDATE",
+  "migration": {
+    "removed": [
+      "react-scripts",
+      "react-pdf-highlighter",
+      "copy-webpack-plugin",
+      "web-vitals",
+      "Create React App HTML and entry surfaces",
+      "Jest-specific setup",
+      "copied PDF.js worker workflow"
+    ],
+    "adopted": {
+      "vite": "8.1.5",
+      "vitest": "4.1.10",
+      "react": "18.2.0",
+      "react-pdf": "10.4.1",
+      "node": "22.12.0"
+    }
+  },
+  "proof": {
+    "lock_regeneration": "PASS",
+    "locked_install": "PASS",
+    "tests_passed": 4,
+    "tests_failed": 0,
+    "production_build": "PASS",
+    "production_audit": "PASS",
+    "production_vulnerabilities": 0,
+    "one_shot_workflow_removed": true
+  },
+  "build_outputs": {
+    "html_kb": 0.67,
+    "pdf_kb": 444.81,
+    "pdf_worker_kb": 1046.21,
+    "css_kb": 10.65,
+    "javascript_kb": 564.17,
+    "javascript_gzip_kb": 170.91
+  },
+  "warnings": [
+    {
+      "type": "BUNDLE_SIZE",
+      "severity": "NON_FATAL",
+      "detail": "The main JavaScript chunk exceeds Vite's 500 kB warning threshold. Functional, build, and security gates passed; code splitting remains an optimization opportunity."
+    },
+    {
+      "type": "DEPRECATED_DEV_TRANSITIVE",
+      "severity": "NON_SECURITY",
+      "detail": "npm reported the jsdom transitive package whatwg-encoding as deprecated; npm audit reported zero vulnerabilities."
+    }
+  ],
+  "nonclaims": {
+    "deployment_verified": false,
+    "upload_flow_implemented": false,
+    "persistent_annotations_implemented": false,
+    "ocr_implemented": false,
+    "ai_document_analysis_implemented": false
+  },
+  "evidence": {
+    "transaction_receipt": ".audit/vite-lock-transaction/receipt.md",
+    "package_lock": "package-lock.json",
+    "ci_workflow": ".github/workflows/ci.yml"
+  }
+}
