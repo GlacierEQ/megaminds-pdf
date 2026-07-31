@@ -1,38 +1,104 @@
 .App {
-  text-align: center;
+  width: min(1100px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 2rem 0 4rem;
+  color: #172033;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.viewer-header {
+  max-width: 760px;
+  margin-bottom: 1.5rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.viewer-header h1 {
+  margin: 0.25rem 0 0.75rem;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1.05;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.viewer-header p {
+  line-height: 1.6;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.viewer-controls {
+  display: grid;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+}
+
+.viewer-controls label {
+  font-weight: 700;
+}
+
+.viewer-controls input {
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid #94a3b8;
+  border-radius: 0.4rem;
+  font: inherit;
+}
+
+.page-controls {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  gap: 0.75rem;
 }
 
-.App-link {
-  color: #61dafb;
+.page-controls button {
+  padding: 0.65rem 0.9rem;
+  border: 1px solid #334155;
+  border-radius: 0.4rem;
+  background: #ffffff;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.page-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.pdf-frame {
+  overflow: auto;
+  min-height: 520px;
+  padding: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #e2e8f0;
+}
+
+.react-pdf__Page {
+  width: max-content;
+  margin: 0 auto;
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.18);
+}
+
+mark {
+  padding: 0 0.08em;
+}
+
+@media (max-width: 640px) {
+  .App {
+    width: min(100% - 1rem, 1100px);
+    padding-top: 1rem;
   }
-  to {
-    transform: rotate(360deg);
+
+  .pdf-frame {
+    padding: 0.5rem;
   }
 }
