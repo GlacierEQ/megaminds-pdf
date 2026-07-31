@@ -1,0 +1,59 @@
+name: Regenerate verified Vite lockfile once
+
+on:
+  push:
+    branches:
+      - hardening/pdf-viewer-truth-contract-2026-07-30
+    paths:
+      - ".github/workflows/regenerate-vite-lock-once.yml"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: megaminds-pdf-vite-lockfile
+  cancel-in-progress: false
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out the migration branch
+        uses: actions/checkout@v5
+        with:
+          ref: hardening/pdf-viewer-truth-contract-2026-07-30
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: npm
+
+      - name: Regenerate the dependency lock
+        run: npm install --package-lock-only --ignore-scripts
+
+      - name: Prove the regenerated lock installs cleanly
+        run: |
+          rm -rf node_modules
+          npm ci
+
+      - name: Run viewer behavior tests
+        run: npm run test:ci
+
+      - name: Build the Vite production bundle
+        run: npm run build
+
+      - name: Reject high-severity production findings
+        run: npm run audit:prod
+
+      - name: Remove one-shot workflow and commit the verified lock
+        run: |
+          rm .github/workflows/regenerate-vite-lock-once.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add package-lock.json .github/workflows/regenerate-vite-lock-once.yml
+          git commit -m "build: lock the verified Vite PDF viewer toolchain"
+          git push origin HEAD:hardening/pdf-viewer-truth-contract-2026-07-30
