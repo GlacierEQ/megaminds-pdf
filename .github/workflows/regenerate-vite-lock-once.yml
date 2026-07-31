@@ -32,28 +32,66 @@ jobs:
           node-version: 22.12.0
           cache: npm
 
-      - name: Regenerate the dependency lock
-        run: npm install --package-lock-only --ignore-scripts
-
-      - name: Prove the regenerated lock installs cleanly
+      - name: Execute and receipt the lock transaction
+        id: transaction
+        shell: bash
         run: |
-          rm -rf node_modules
-          npm ci
+          set -uo pipefail
+          mkdir -p .audit/vite-lock-transaction
+          summary=.audit/vite-lock-transaction/receipt.md
+          : > "$summary"
+          overall=0
 
-      - name: Run viewer behavior tests
-        run: npm run test:ci
+          run_step() {
+            name="$1"
+            shift
+            log=".audit/vite-lock-transaction/${name}.log"
+            echo "## ${name}" >> "$summary"
+            echo '```text' >> "$summary"
+            "$@" > "$log" 2>&1
+            rc=$?
+            cat "$log" >> "$summary"
+            echo '```' >> "$summary"
+            echo "exit_code: ${rc}" >> "$summary"
+            echo >> "$summary"
+            if [ "$rc" -ne 0 ]; then
+              overall=1
+            fi
+            return "$rc"
+          }
 
-      - name: Build the Vite production bundle
-        run: npm run build
+          run_step regenerate_lock npm install --package-lock-only --ignore-scripts || true
+          if [ "$overall" -eq 0 ]; then
+            rm -rf node_modules
+            run_step locked_install npm ci || true
+          fi
+          if [ "$overall" -eq 0 ]; then
+            run_step behavior_tests npm run test:ci || true
+          fi
+          if [ "$overall" -eq 0 ]; then
+            run_step production_build npm run build || true
+          fi
+          if [ "$overall" -eq 0 ]; then
+            run_step production_audit npm run audit:prod || true
+          fi
 
-      - name: Reject high-severity production findings
-        run: npm run audit:prod
+          {
+            echo "transaction_status: $([ "$overall" -eq 0 ] && echo VERIFIED || echo FAILED)"
+            echo "source_commit: ${GITHUB_SHA}"
+            echo "node_version: $(node --version)"
+            echo "npm_version: $(npm --version)"
+          } >> "$summary"
 
-      - name: Remove one-shot workflow and commit the verified lock
-        run: |
-          rm .github/workflows/regenerate-vite-lock-once.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add package-lock.json .github/workflows/regenerate-vite-lock-once.yml
-          git commit -m "build: lock the verified Vite PDF viewer toolchain"
+          git add .audit/vite-lock-transaction
+
+          if [ "$overall" -eq 0 ]; then
+            rm .github/workflows/regenerate-vite-lock-once.yml
+            git add package-lock.json .github/workflows/regenerate-vite-lock-once.yml
+            git commit -m "build: lock the verified Vite PDF viewer toolchain"
+          else
+            git commit -m "ci: record the blocked Vite lockfile transaction"
+          fi
           git push origin HEAD:hardening/pdf-viewer-truth-contract-2026-07-30
+          exit "$overall"
