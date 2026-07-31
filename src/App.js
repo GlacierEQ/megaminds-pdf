@@ -47,17 +47,16 @@ export default function App() {
     (textItem) => highlightPattern(textItem.str, terms),
     [terms],
   );
-
-  function onDocumentLoadSuccess({ numPages: loadedPages }) {
+  const onDocumentLoadSuccess = useCallback(({ numPages: loadedPages }) => {
     setNumPages(loadedPages);
     setPageNumber(1);
     setLoadError('');
-  }
-
-  function onDocumentLoadError(error) {
+  }, []);
+  const onDocumentLoadError = useCallback((error) => {
     setNumPages(0);
+    setPageNumber(1);
     setLoadError(error instanceof Error ? error.message : 'The bundled PDF could not be loaded.');
-  }
+  }, []);
 
   const canGoBack = pageNumber > 1;
   const canGoForward = numPages > 0 && pageNumber < numPages;
