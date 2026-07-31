@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   verify:
-    name: Test and build the document viewer
+    name: Test, build, and audit the document viewer
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -23,20 +23,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.12.0
           cache: npm
 
       - name: Install locked dependencies
         run: npm ci
-
-      - name: Reject high-severity production dependency findings
-        run: npm audit --omit=dev --audit-level=high
-
-      - name: Prepare the installed PDF.js worker
-        run: npm run prepare:pdf-worker
 
       - name: Execute viewer behavior tests
         run: npm run test:ci
 
       - name: Build the production bundle
         run: npm run build
+
+      - name: Reject high-severity production dependency findings
+        run: npm run audit:prod
