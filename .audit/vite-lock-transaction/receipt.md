@@ -1,54 +1,83 @@
 ## regenerate_lock
 ```text
-npm error code ERESOLVE
-npm error ERESOLVE could not resolve
-npm error
-npm error While resolving: megaminds-pdf@0.2.0
-npm error Found: @babel/core@7.22.5
-npm error node_modules/@babel/core
-npm error   peer @babel/core@">=7.11.0" from @babel/eslint-parser@7.22.5
-npm error   node_modules/@babel/eslint-parser
-npm error     @babel/eslint-parser@"^7.16.3" from eslint-config-react-app@7.0.1
-npm error     node_modules/eslint-config-react-app
-npm error       eslint-config-react-app@"^7.0.1" from react-scripts@5.0.1
-npm error       node_modules/react-scripts
-npm error   peer @babel/core@"^7.0.0" from @babel/helper-compilation-targets@7.22.5
-npm error   node_modules/@babel/helper-compilation-targets
-npm error     @babel/helper-compilation-targets@"^7.22.5" from @babel/core@7.22.5
-npm error     @babel/helper-compilation-targets@"^7.17.7" from @babel/helper-define-polyfill-provider@0.4.0
-npm error     node_modules/@babel/helper-define-polyfill-provider
-npm error       @babel/helper-define-polyfill-provider@"^0.4.0" from babel-plugin-polyfill-corejs2@0.4.3
-npm error       node_modules/babel-plugin-polyfill-corejs2
-npm error         babel-plugin-polyfill-corejs2@"^0.4.3" from @babel/plugin-transform-runtime@7.22.5
-npm error         node_modules/@babel/plugin-transform-runtime
-npm error         1 more (@babel/preset-env)
-npm error       2 more (babel-plugin-polyfill-corejs3, babel-plugin-polyfill-regenerator)
-npm error     4 more (@babel/plugin-transform-classes, ...)
-npm error   116 more (@babel/helper-create-class-features-plugin, ...)
-npm error
-npm error Could not resolve dependency:
-npm error dev @vitejs/plugin-react@"6.0.4" from the root project
-npm error
-npm error Conflicting peer dependency: @babel/core@8.0.0-rc.4
-npm error node_modules/@babel/core
-npm error   peer @babel/core@"^7.29.0 || ^8.0.0-rc.1" from @rolldown/plugin-babel@0.2.3
-npm error   node_modules/@rolldown/plugin-babel
-npm error     peerOptional @rolldown/plugin-babel@"^0.1.7 || ^0.2.0" from @vitejs/plugin-react@6.0.4
-npm error     node_modules/@vitejs/plugin-react
-npm error       dev @vitejs/plugin-react@"6.0.4" from the root project
-npm error
-npm error Fix the upstream dependency conflict, or retry
-npm error this command with --force or --legacy-peer-deps
-npm error to accept an incorrect (and potentially broken) dependency resolution.
-npm error
-npm error
-npm error For a full report see:
-npm error /home/runner/.npm/_logs/2026-07-31T10_16_01_114Z-eresolve-report.txt
-npm error A complete log of this run can be found in: /home/runner/.npm/_logs/2026-07-31T10_16_01_114Z-debug-0.log
-```
-exit_code: 1
 
-transaction_status: FAILED
-source_commit: d57fe4475eaa15988a14baf887cecd1b34737f86
+up to date, audited 163 packages in 8s
+
+52 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+exit_code: 0
+
+## locked_install
+```text
+npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+
+added 124 packages, and audited 125 packages in 3s
+
+33 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+exit_code: 0
+
+## behavior_tests
+```text
+
+> megaminds-pdf@0.2.0 test:ci
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv4.1.10 [39m[90m/home/runner/work/megaminds-pdf/megaminds-pdf[39m
+
+ [32m✓[39m src/App.test.jsx [2m([22m[2m4 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m4 passed[39m[22m[90m (4)[39m
+[2m   Start at [22m 10:17:32
+[2m   Duration [22m 978ms[2m (transform 112ms, setup 93ms, import 208ms, tests 131ms, environment 408ms)[22m
+
+```
+exit_code: 0
+
+## production_build
+```text
+
+> megaminds-pdf@0.2.0 build
+> vite build
+
+[36mvite v8.1.5 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 54 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                        0.67 kB │ gzip:   0.40 kB
+dist/assets/Black–Scholes_equation-uNZqdi33.pdf      444.81 kB
+dist/assets/pdf.worker.min-qwK7q_zL.mjs            1,046.21 kB
+dist/assets/index-BIqzo9VF.css                        10.65 kB │ gzip:   2.57 kB
+dist/assets/index-CRmfg50U.js                        564.17 kB │ gzip: 170.91 kB
+
+[32m✓ built in 250ms[39m
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+```
+exit_code: 0
+
+## production_audit
+```text
+
+> megaminds-pdf@0.2.0 audit:prod
+> npm audit --omit=dev --audit-level=high
+
+found 0 vulnerabilities
+```
+exit_code: 0
+
+transaction_status: VERIFIED
+source_commit: 043b619ef6bde75b6443019122b3979b7d3147dd
 node_version: v22.12.0
 npm_version: 10.9.0
