@@ -1,0 +1,20 @@
+
+> megaminds-pdf@0.2.0 build
+> vite build
+
+[36mvite v8.1.5 [32mbuilding client environment for production...[36m[39m
+[2Ktransforming...✓ 54 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                                        0.67 kB │ gzip:   0.40 kB
+dist/assets/Black–Scholes_equation-uNZqdi33.pdf      444.81 kB
+dist/assets/pdf.worker.min-qwK7q_zL.mjs            1,046.21 kB
+dist/assets/index-BIqzo9VF.css                        10.65 kB │ gzip:   2.57 kB
+dist/assets/index-CRmfg50U.js                        564.17 kB │ gzip: 170.91 kB
+
+[32m✓ built in 250ms[39m
+[33m[plugin builtin:vite-reporter] 
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
