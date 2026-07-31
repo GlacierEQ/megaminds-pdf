@@ -6,7 +6,7 @@
 
 **Canonical repository:** `GlacierEQ/megaminds-pdf`  
 **Canonical branch:** `master`  
-**Current posture:** `VERIFIED_CANDIDATE`  
+**Current posture:** `VERIFIED`  
 **Identity note:** this is a focused PDF-viewer project; its name does not establish ownership by `mastermind` or any broader intelligence system.
 
 ## The document experience
@@ -46,7 +46,7 @@ The clean lock transaction at commit `a654f6ed7872c66954c99f252c05d31711e3d8c4` 
 - production dependency audit: **0 vulnerabilities**;
 - one-shot lock workflow: removed after success.
 
-The durable machine receipt is [`receipts/vite-migration-verification-2026-07-31.json`](receipts/vite-migration-verification-2026-07-31.json), with full command output preserved under [`.audit/vite-lock-transaction/`](.audit/vite-lock-transaction/).
+The migration was squash-merged into canonical `master` at `5ddcdc40c9b2bb625d39ddf49e3f44e2e892a773`. The durable machine receipt is [`receipts/vite-migration-verification-2026-07-31.json`](receipts/vite-migration-verification-2026-07-31.json), with full command output preserved under [`.audit/vite-lock-transaction/`](.audit/vite-lock-transaction/).
 
 | Inspect or run | What it establishes |
 |---|---|
@@ -148,9 +148,10 @@ purpose: >-
   Render a bundled technical PDF one page at a time and highlight normalized,
   literal search terms in the PDF text layer.
 status:
-  state: VERIFIED_CANDIDATE
+  state: VERIFIED
   evidence_level: FUNCTION_BUILD_AND_PRODUCTION_SECURITY_VERIFIED
-  verified_commit: a654f6ed7872c66954c99f252c05d31711e3d8c4
+  canonical_merge: 5ddcdc40c9b2bb625d39ddf49e3f44e2e892a773
+  verified_lock_commit: a654f6ed7872c66954c99f252c05d31711e3d8c4
   proof:
     locked_install: pass
     viewer_tests: 4_passed
@@ -196,4 +197,4 @@ limits:
 
 ## Branch hygiene
 
-PR #3 preserves the functional viewer hardening and carries this verified toolchain migration. The Dependabot branch must be compared against the migrated lockfile; it should not be merged merely because it updates packages, nor deleted before its unique delta is classified.
+`master` is canonical at the merged Vite migration. The historical PR branch is squash-merged obsolete. The remaining Dependabot branch was generated against the removed CRA lock graph and must be classified as stale unless a current-main comparison proves independently useful package work.
