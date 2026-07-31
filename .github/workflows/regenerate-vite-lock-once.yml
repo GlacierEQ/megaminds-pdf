@@ -37,6 +37,7 @@ jobs:
         shell: bash
         run: |
           set -uo pipefail
+          rm -rf .audit/vite-lock-transaction
           mkdir -p .audit/vite-lock-transaction
           summary=.audit/vite-lock-transaction/receipt.md
           : > "$summary"
@@ -60,6 +61,7 @@ jobs:
             return "$rc"
           }
 
+          rm -f package-lock.json
           run_step regenerate_lock npm install --package-lock-only --ignore-scripts || true
           if [ "$overall" -eq 0 ]; then
             rm -rf node_modules
