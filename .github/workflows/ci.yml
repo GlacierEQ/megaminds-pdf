@@ -29,6 +29,9 @@ jobs:
       - name: Install locked dependencies
         run: npm ci
 
+      - name: Reject high-severity production dependency findings
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Prepare the installed PDF.js worker
         run: npm run prepare:pdf-worker
 
