@@ -6,7 +6,7 @@
 
 **Canonical repository:** `GlacierEQ/megaminds-pdf`  
 **Canonical branch:** `master`  
-**Current posture:** `VITE_MIGRATION_PENDING_LOCKED_VERIFICATION`  
+**Current posture:** `VERIFIED_CANDIDATE`  
 **Identity note:** this is a focused PDF-viewer project; its name does not establish ownership by `mastermind` or any broader intelligence system.
 
 ## The document experience
@@ -35,7 +35,18 @@ The following packages and compatibility layers are intentionally removed:
 - CRA HTML, entrypoint, Jest setup, and report hook;
 - the copied-worker script and public worker artifact boundary.
 
-### Proof path
+### Verified proof
+
+The clean lock transaction at commit `a654f6ed7872c66954c99f252c05d31711e3d8c4` established:
+
+- regenerated npm lockfile: passed;
+- fresh `npm ci`: passed with zero vulnerabilities;
+- Vitest behavior suite: **4 passed, 0 failed**;
+- Vite production build: passed;
+- production dependency audit: **0 vulnerabilities**;
+- one-shot lock workflow: removed after success.
+
+The durable machine receipt is [`receipts/vite-migration-verification-2026-07-31.json`](receipts/vite-migration-verification-2026-07-31.json), with full command output preserved under [`.audit/vite-lock-transaction/`](.audit/vite-lock-transaction/).
 
 | Inspect or run | What it establishes |
 |---|---|
@@ -114,7 +125,9 @@ npm run build
 npm run audit:prod
 ```
 
-Promotion requires all four commands to pass against the regenerated lockfile. A successful build alone is insufficient while a high or critical production dependency finding remains.
+All four commands passed against the checked-in regenerated lockfile. A successful build alone remains insufficient if a future high or critical production dependency finding appears.
+
+The production build emits a non-fatal chunk-size warning because the renderer and worker are substantial browser assets. That is an optimization opportunity, not a failed correctness or security gate.
 
 ### Intentional limits
 
@@ -135,22 +148,26 @@ purpose: >-
   Render a bundled technical PDF one page at a time and highlight normalized,
   literal search terms in the PDF text layer.
 status:
-  state: VITE_MIGRATION_PENDING_LOCKED_VERIFICATION
-  evidence_level: FUNCTION_VERIFIED_SECURITY_RECHECK_REQUIRED
-  preserved_proof:
-    - four viewer behavior tests passed before toolchain migration
-    - production bundle built before toolchain migration
-  required_promotion_proof:
-    - regenerated package-lock.json
-    - npm ci
-    - Vitest behavior suite
-    - Vite production build
-    - zero high or critical production audit findings
+  state: VERIFIED_CANDIDATE
+  evidence_level: FUNCTION_BUILD_AND_PRODUCTION_SECURITY_VERIFIED
+  verified_commit: a654f6ed7872c66954c99f252c05d31711e3d8c4
+  proof:
+    locked_install: pass
+    viewer_tests: 4_passed
+    production_build: pass
+    production_audit_vulnerabilities: 0
+    one_shot_workflow_removed: true
+  unverified_scope:
+    - deployment
+    - user-provided document ingestion
+    - persistent annotations
+    - OCR
+    - AI document intelligence
 toolchain:
-  runtime: React 18
-  development_and_build: Vite 8
-  tests: Vitest 4 + Testing Library
-  pdf_renderer: react-pdf 10
+  runtime: React 18.2.0
+  development_and_build: Vite 8.1.5
+  tests: Vitest 4.1.10 + Testing Library
+  pdf_renderer: react-pdf 10.4.1
 inputs:
   document: src/Black–Scholes_equation.pdf
   search: comma or whitespace separated literal terms
@@ -179,4 +196,4 @@ limits:
 
 ## Branch hygiene
 
-PR #3 preserves the functional viewer hardening and carries this measured toolchain migration. The Dependabot branch must be compared after the new lockfile is verified; it should not be merged merely because it updates packages, nor deleted before its unique delta is classified.
+PR #3 preserves the functional viewer hardening and carries this verified toolchain migration. The Dependabot branch must be compared against the migrated lockfile; it should not be merged merely because it updates packages, nor deleted before its unique delta is classified.
